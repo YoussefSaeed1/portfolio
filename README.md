@@ -7,7 +7,7 @@ Personal portfolio of **Youssef Saeed**, Data Analytics Tech Lead.
 - Speaking and community work
 - Animated career-journey map
 
-Live site: https://youssefsaeed1.github.io/portfolio/
+Live site: https://youssefsaeed-portfolio.vercel.app/
 
 ## Structure
 
