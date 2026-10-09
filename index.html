@@ -467,7 +467,7 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
 <section id="works" class="page">
   <div class="wrap">
     <div class="sec-head">
-      <div><h2 class="gt">My Works</h2><h3>Dashboards built around a business question</h3></div>
+      <div><h2 class="gt">My Works</h2><h3>Dashboards and models built around a business question</h3></div>
       <div class="filters" role="group" aria-label="Filter projects" id="filters"></div>
     </div>
     <div class="grid" id="grid"></div>
@@ -685,6 +685,11 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
      q:"Revenue is up 21.8%, so why are stockouts rising?",
      p:"Revenue reached $15.51M with $7.75M gross profit, but the stockout rate climbed to 6.3% from 5.5% last year. Four report pages cover the executive view, operations, supplier and warehouse performance, and product detail with ABC classification.",
      tags:["Power BI","DAX","Data modeling"], imgs:["inventory","inventory-2","inventory-3","inventory-4"]},
+    {t:"Vehicle Price Prediction", d:"Oct 2026", cat:"Machine Learning",
+     q:"Can a car's specs tell you its price?",
+     p:"A Gradient Boosting model prices 9,820 cars within 6.9% on average, and within 10.2% for car models it has never seen. Along the way I found data leakage and a $2,000 placeholder price that had inflated the first version's R², and rebuilt it as a clean scikit‑learn pipeline.",
+     tags:["Python","scikit-learn","Machine Learning"], imgs:["vehicle-price","vehicle-price-2","vehicle-price-3","vehicle-price-4"],
+     link:"https://github.com/YoussefSaeed1/vehicle-price-prediction"},
     {t:"Sales Tracker", d:"Sep 2025", cat:"Sales",
      q:"How much does the business depend on one category?",
      p:"$24.91M revenue at a 41.97% profit margin, and bikes bring in almost 95% of it. Tracks revenue, cost and profit for 2015 to mid‑2017 by category and region.",
@@ -714,24 +719,25 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
   var grid=document.getElementById("grid"), filters=document.getElementById("filters");
   grid.innerHTML = projects.map(function(p,i){
     var pages=p.imgs.length>1?p.imgs.length+' pages ⤢':'View ⤢';
-    return '<div class="proj'+(i===0?' feature':'')+'" role="button" tabindex="0" data-i="'+i+'" data-cat="'+p.cat+'" aria-label="Open '+p.t+' dashboard">'+
-      '<span class="viz"><img src="img/'+p.imgs[0]+'.jpg" alt="'+p.t+' Power BI dashboard" loading="lazy"><span class="open">'+pages+'</span></span>'+
+    return '<div class="proj'+(i===0?' feature':'')+'" role="button" tabindex="0" data-i="'+i+'" data-cat="'+p.cat+'" aria-label="Open '+p.t+'">'+
+      '<span class="viz"><img src="img/'+p.imgs[0]+'.jpg" alt="'+p.t+(p.link?' charts':' Power BI dashboard')+'" loading="lazy"><span class="open">'+pages+'</span></span>'+
       '<div class="proj-body"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="cat">'+p.cat+'</span><time>'+p.d+'</time></div>'+
       '<h4>'+p.t+'</h4><p><strong>'+p.q+'</strong> '+p.p+'</p>'+
-      '<div class="chips">'+p.tags.map(function(t){return '<span class="chip">'+ic(TAGICON[t])+t+'</span>';}).join('')+'</div></div></div>';
+      '<div class="chips">'+p.tags.map(function(t){return '<span class="chip">'+ic(TAGICON[t])+t+'</span>';}).join('')+
+      (p.link?'<a class="chip" href="'+p.link+'" target="_blank" rel="noopener" data-ext style="text-decoration:none">'+ic("github")+'Code ↗</a>':'')+'</div></div></div>';
   }).join('');
 
   // Lightbox
   var lb=document.getElementById("lb"), lbImg=document.getElementById("lbImg"), lbT=document.getElementById("lbTitle"),
       lbC=document.getElementById("lbCount"), lbP=document.getElementById("lbPrev"), lbN=document.getElementById("lbNext"),
       cur=null, pg=0, lastFocus=null;
-  function showLb(){ var p=projects[cur]; lbImg.src="img/"+p.imgs[pg]+".jpg"; lbImg.alt=p.t+" dashboard, page "+(pg+1);
+  function showLb(){ var p=projects[cur]; lbImg.src="img/"+p.imgs[pg]+".jpg"; lbImg.alt=p.t+", page "+(pg+1);
     lbT.textContent=p.t; var multi=p.imgs.length>1; lbC.textContent=multi?("Page "+(pg+1)+" of "+p.imgs.length):"";
     lbP.hidden=lbN.hidden=!multi; lbP.disabled=pg===0; lbN.disabled=pg===p.imgs.length-1; }
   function openLb(i){ cur=i; pg=0; lastFocus=document.activeElement; showLb(); lb.hidden=false; document.body.style.overflow="hidden"; document.getElementById("lbClose").focus(); }
   function closeLb(){ lb.hidden=true; document.body.style.overflow=""; if(lastFocus) lastFocus.focus(); }
-  grid.addEventListener("click",function(e){var c=e.target.closest(".proj"); if(c) openLb(+c.dataset.i);});
-  grid.addEventListener("keydown",function(e){var c=e.target.closest(".proj"); if(c&&(e.key==="Enter"||e.key===" ")){e.preventDefault(); openLb(+c.dataset.i);}});
+  grid.addEventListener("click",function(e){ if(e.target.closest("[data-ext]")) return; var c=e.target.closest(".proj"); if(c) openLb(+c.dataset.i);});
+  grid.addEventListener("keydown",function(e){ if(e.target.closest("[data-ext]")) return; var c=e.target.closest(".proj"); if(c&&(e.key==="Enter"||e.key===" ")){e.preventDefault(); openLb(+c.dataset.i);}});
   lbP.addEventListener("click",function(){ if(pg>0){pg--;showLb();} });
   lbN.addEventListener("click",function(){ if(pg<projects[cur].imgs.length-1){pg++;showLb();} });
   document.getElementById("lbClose").addEventListener("click",closeLb);
