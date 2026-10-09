@@ -64,6 +64,8 @@ p{margin:0}
 .hero-grid>*{min-width:0}
 .hero h1{font-size:clamp(46px,6.2vw,82px);font-weight:700;letter-spacing:-.025em;line-height:1}
 .typed{font-family:var(--display);font-weight:500;font-size:clamp(22px,2.6vw,34px);color:var(--teal);margin-top:14px;min-height:1.3em}
+#typed{display:inline-block;transition:opacity .9s ease,filter .9s ease,transform .9s ease;will-change:opacity,filter,transform}
+#typed.swap-out{opacity:0;filter:blur(8px);transform:translateY(6px)}
 .caret{display:inline-block;width:3px;height:1em;background:var(--ink);margin-left:4px;vertical-align:-.14em;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
 .subtitle{font-family:var(--display);font-weight:500;font-size:clamp(19px,1.9vw,24px);color:var(--ink);margin-top:10px;letter-spacing:-.005em}
@@ -380,7 +382,7 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
     <div class="hero-grid">
       <div>
         <h1 class="gt">Youssef Saeed</h1>
-        <p class="typed"><span id="typed">Data Analytics Tech Lead</span><i class="caret" aria-hidden="true"></i></p>
+        <p class="typed" aria-live="polite"><span id="typed">Data Analytics Tech Lead</span></p>
         <p class="subtitle">Bridging Data, AI &amp; Business Strategy</p>
         <p class="lede">I help organizations turn complex data into <b>trusted insights, scalable analytics solutions, and smarter business decisions</b>, connecting business needs with technology to create measurable impact.</p>
         <div class="socials">
@@ -886,18 +888,15 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
     addEventListener("scroll",update,{passive:true}); addEventListener("resize",update); update();
   })();
 
-  // Typed role
+  // Rotating title: slow fade + blur swap
   (function(){
     var el=document.getElementById("typed"); if(!el) return;
-    var roles=["Data Analytics Tech Lead"];
+    var roles=["Data Analytics Tech Lead","Analytics & BI Leader","Data Business Partner"], i=0;
     if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    var r=0,i=roles[0].length,del=true;
-    function tick(){
-      var w=roles[r];
-      if(del){ i--; el.textContent=w.slice(0,i); if(i<=0){del=false;r=(r+1)%roles.length;} setTimeout(tick,i<=0?400:40); }
-      else { var n=roles[r]; i++; el.textContent=n.slice(0,i); if(i>=n.length){del=true;setTimeout(tick,2400);} else setTimeout(tick,75); }
-    }
-    setTimeout(tick,3000);
+    setInterval(function(){
+      el.classList.add("swap-out");
+      setTimeout(function(){ i=(i+1)%roles.length; el.textContent=roles[i]; el.classList.remove("swap-out"); }, 900);
+    }, 4800);
   })();
 
   // ---------- Journey map ----------
