@@ -382,6 +382,16 @@ a.lnk:hover,button.lnk:hover{border-color:var(--teal);transform:translateX(4px)}
 .lb-ctl button{font-family:var(--body);font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer}
 .lb-ctl button:hover{border-color:var(--teal)}
 .lb-ctl button[disabled]{opacity:.35;cursor:default}
+.lb-box{min-height:0}
+.lb-txt{flex:1 1 300px}
+@media (max-width:640px){
+  .lb{align-items:flex-start;background:rgba(8,10,12,.97)}
+  .lb-bar{gap:10px}
+  .lb-bar strong{font-size:18px}
+  .lb-txt p{font-size:14px;max-height:26vh;overflow:auto}
+  .lb-ctl{width:100%}.lb-ctl button{flex:1;padding:9px 10px}
+  .lb-img{flex:0 1 auto;min-height:0;max-height:none}
+}
 
 /* Footer */
 footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linear-gradient(180deg,transparent,rgba(55,169,155,.05))}
