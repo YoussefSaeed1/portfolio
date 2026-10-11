@@ -825,7 +825,11 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
      q:"Revenue is up 21.8%, so why are stockouts rising?",
      p:"Revenue reached $15.51M with $7.75M gross profit, but the stockout rate climbed to 6.3% from 5.5% last year. Four report pages cover the executive view, operations, supplier and warehouse performance, and product detail with ABC classification.",
      tags:["Power BI","DAX","Data modeling"], imgs:["inventory","inventory-2","inventory-3","inventory-4"]},
-    {t:"Vehicle Price Prediction", d:"Oct 2026", cat:"Machine Learning",
+    {t:"Pharmaceutical Trade Intelligence, Egypt", d:"Feb 2026", cat:"Market",
+     q:"Who supplies Egypt's antibiotic medicines, and how concentrated is that supply?",
+     p:"Real UN Comtrade data, 2018 to September 2025. The first version summed every row and overstated imports 2.76× ($1.83B instead of $665M); the rebuilt model loads only the total rows. In January to September 2025 imports were $50.5M, down 16.5% on the same months of 2024, and Belgium (43%) and Switzerland (26%) supplied most of it.",
+     tags:["Power BI","Power Query","Data quality"], imgs:["pharma","pharma-2","pharma-3","pharma-4"]},
+    {t:"Vehicle Price Prediction", d:"Dec 2025", cat:"Machine Learning",
      q:"Can a car's specs tell you its price?",
      p:"A Gradient Boosting model prices 9,820 cars within 6.9% on average, and within 10.2% for car models it has never seen. Along the way I found data leakage and a $2,000 placeholder price that had inflated the first version's R², and rebuilt it as a clean scikit‑learn pipeline.",
      tags:["Python","scikit-learn","Machine Learning"], imgs:["vehicle-price","vehicle-price-2","vehicle-price-3","vehicle-price-4"],
@@ -834,33 +838,33 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
      q:"How much does the business depend on one category?",
      p:"$24.91M revenue at a 41.97% profit margin, and bikes bring in almost 95% of it. Tracks revenue, cost and profit for 2015 to mid‑2017 by category and region.",
      tags:["Power BI","DAX"], imgs:["sales-tracker","sales-tracker-2","sales-tracker-3","sales-tracker-4"]},
+    {t:"Procure-to-Pay Performance", d:"Jun 2025", cat:"Operations",
+     q:"Where does the procurement cycle lose time, and who buys off-contract?",
+     p:"Follows 12,234 purchase orders from requisition to payment (sample data). In FY2025, $48.6M of spend took 26.9 days from request to goods receipt against a 25-day target, 80.4% of deliveries arrived on time, and 8.2% of spend was maverick buying. Row-level security by plant, a supplier scorecard and data quality checks on every refresh.",
+     tags:["Power BI","DAX","Governance"], imgs:["p2p","p2p-2","p2p-3","p2p-4"]},
     {t:"E‑Commerce Sales & Profit", d:"Aug 2024", cat:"Sales",
      q:"Which regions sell well but don't make money?",
      p:"$1.9M in sales and $224.1K profit. The South region sold $357K yet lost $14.4K, while May was the most profitable month.",
      tags:["Power BI","Power Query"], imgs:["ecommerce"]},
-    {t:"Call Center Performance", d:"Oct 2024", cat:"Operations",
-     q:"How many calls actually get resolved?",
-     p:"Of 5,000 calls, 81% were answered and 73% resolved, with average satisfaction at 3.4 out of 5. Breaks results down by agent, topic and month.",
-     tags:["Power BI","DAX"], imgs:["call-center"]},
-    {t:"Sales and Forecast", d:"Oct 2023", cat:"Sales",
-     q:"How did 2009 compare with last year and the forecast?",
-     p:"2009 sales of $40.62M came in $2.3M below 2008 but above the $39M forecast. The United States carries most of the revenue.",
-     tags:["Power BI","Forecasting"], imgs:["sales-forecast"]},
-    {t:"Sales Analysis", d:"Sep 2023", cat:"Sales",
-     q:"When and where do electronics sales peak?",
-     p:"$34.49M from 186K orders across nine US cities in 2019. December is the peak month at $4.6M, and laptops and phones lead the product mix.",
-     tags:["Power BI"], imgs:["sales-analysis"]},
-    {t:"Egypt Real Estate Market", d:"May 2023", cat:"Python",
-     q:"Where are villas and apartments priced highest?",
-     p:"Listings across Cairo, Alexandria and Giza, cleaned and explored in Python, then presented in Power BI. Alexandria villas average 5.5M, the highest of any location and property type.",
-     tags:["Python","Pandas","Power BI"], imgs:["realestate"]}
+    {t:"Sales vs Forecast", d:"Oct 2023", cat:"Sales",
+     q:"Did 2009 beat the plan, and where did the gap come from?",
+     p:"2009 sales of $40.62M were $2.30M below 2008 but $1.62M above the $39.00M forecast. A waterfall bridges the change by country, and a heatmap shows forecast accuracy by category and country (sample data shaped like the original Contoso report).",
+     tags:["Power BI","DAX","Forecasting"], imgs:["sales-forecast","sales-forecast-2"]},
+    {t:"Electronics Sales 2019", d:"Sep 2023", cat:"Sales",
+     q:"When and where should marketing spend go?",
+     p:"$34.49M from 187.3K orders across nine US cities (sample data). December is the peak month at $4.65M, San Francisco brings 24% of revenue, and October to December together bring 34%. Orders are counted by order ID, not by order line as in the first version.",
+     tags:["Power BI","Power Query"], imgs:["electronics","electronics-2"]},
+    {t:"Egypt Property Market", d:"May 2023", cat:"Market",
+     q:"Where do buyers get the most space for their money?",
+     p:"5,000 listings across Cairo, Giza and Alexandria (sample data), cleaned in Power Query to remove duplicates and zero-area rows. Alexandria villas are the most expensive at EGP 5.25M on average, while Alexandria apartments are the cheapest per m² at about EGP 10.2K.",
+     tags:["Power BI","Power Query"], imgs:["property","property-2"]}
   ];
 
   var grid=document.getElementById("grid"), filters=document.getElementById("filters");
   grid.innerHTML = projects.map(function(p,i){
     var pages=p.imgs.length>1?p.imgs.length+' pages ⤢':'View ⤢';
     return '<div class="proj'+(i===0?' feature':'')+'" role="button" tabindex="0" data-i="'+i+'" data-cat="'+p.cat+'" aria-label="Open '+p.t+'">'+
-      '<span class="viz"><img src="img/'+p.imgs[0]+'.jpg" alt="'+p.t+(p.link?' charts':' Power BI dashboard')+'" loading="lazy"><span class="open">'+pages+'</span></span>'+
+      '<span class="viz"><img src="img/'+p.imgs[0]+'.jpg" alt="'+p.t+(p.link?' charts':' Power BI dashboard')+'" loading="lazy"><span class="open">'+pages+'</span>'+'</span>'+
       '<div class="proj-body"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="cat">'+p.cat+'</span><time>'+p.d+'</time></div>'+
       '<h4>'+p.t+'</h4><p>'+p.q+'</p>'+
       '<div class="chips">'+p.tags.slice(0,3).map(function(t){return '<span class="chip">'+ic(TAGICON[t])+t+'</span>';}).join('')+
