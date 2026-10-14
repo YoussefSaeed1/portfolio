@@ -169,6 +169,9 @@ section.page{padding-block:clamp(80px,11vw,140px)}
 .proj p{font-size:15px;color:var(--muted)}
 .proj p strong{color:var(--ink);font-weight:500}
 .proj .chips{margin-top:auto;padding-top:6px}
+.proj .sub{font-size:13px;font-weight:500;color:var(--teal);margin-top:-4px}
+.chip.demo{border-color:rgba(55,169,155,.55);color:var(--teal)}
+.chip.demo:hover{background:rgba(55,169,155,.12)}
 .proj time{font-family:var(--mono);font-size:12px;color:var(--muted)}
 @media (min-width:981px){.proj.feature{grid-column:span 2;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr)}
   .proj.feature .viz{aspect-ratio:auto;height:100%;min-height:280px;border-bottom:0;border-right:1px solid var(--line)}
@@ -825,15 +828,22 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
 (function(){
   var ICON = {"powerbi": 1, "excel": 1, "tableau": 1, "sqlserver": 1, "python": 1, "powerautomate": 1, "alteryx": 1, "bigquery": 1, "azure": 1, "adf": 1, "azuredevops": 1, "databricks": 1, "gcp": 1, "git": 1, "github": 1, "claude": 1, "chatgpt": 1, "mcp": 1, "looker": 1, "linkedin": 1, "whatsapp": 1, "mail": 1, "coffee": 1, "calendar": 1, "download": 1, "query": 1, "rlang": 1, "msft": 1, "datacamp": 1, "udacity": 1, "copy": 1, "external": 1, "database": 1, "cloud": 1, "code": 1, "sparkles": 1, "users": 1, "github-dark": 1, "layers": 1, "chart": 1};
   function ic(k){ return ICON[k] ? '<svg class="ic"><use href="#i-'+k+'"/></svg>' : ''; }
-  var TAGICON = {"Power BI":"powerbi","Python":"python","Power Query":"query","Excel":"excel","SQL":"sqlserver"};
+  var TAGICON = {"Claude Dashboard":"claude","D3.js":"code","Power BI":"powerbi","Python":"python","Power Query":"query","Excel":"excel","SQL":"sqlserver"};
 
   var projects = [
-    {t:"Inventory Management", d:"Oct 2026", cat:"Operations",
+    {t:"Inventory Management", d:"Oct 2026", cat:"Supply Chain",
      q:"Revenue is up 21.8% but stockouts are rising: which products need higher reorder points?",
      p:"Revenue reached $15.51M with $7.75M gross profit, but the stockout rate climbed to 6.3% from 5.5% last year. Five report pages cover the executive view, operations, supplier and warehouse performance, product detail with ABC classification, and data quality. Row-level security by warehouse and a catalogue of 147 documented measures. UI inspired by Arbaz Ahmad's Inventory Management Dashboard.",
      tags:["Power BI","DAX","Data modeling"], imgs:["inventory","inventory-2","inventory-3","inventory-4","inventory-5"],
      repo:"https://github.com/YoussefSaeed1/powerbi-projects/tree/main/01-inventory-management"},
-    {t:"Pharmaceutical Trade Intelligence, Egypt", d:"Feb 2026", cat:"Market",
+    {t:"Supply Chain Planning | MRP & MPS Control Tower", d:"Oct 2026", cat:"Supply Chain",
+     sub:"End-to-End Supply Chain Planning Analytics",
+     q:"An interactive control tower connecting demand, MPS, BOM, MRP, inventory, procurement, supplier risk, and production capacity to identify shortages and improve production readiness.",
+     p:"Flow: Demand → MPS → BOM explosion → gross requirements → inventory and scheduled receipts → net requirements → shortages → procurement → capacity check → production readiness. Nine pages: Executive Overview, MPS, MRP, Shortage Control Tower, Procurement, Inventory, Capacity, Supplier Risk and About, with global filters and drill-downs. Planned and Executable Production are kept separate, and a shortage is a net requirement whose supplier lead time can no longer be met. Supports production readiness, material shortage prioritization, procurement timing, inventory planning, supplier risk management, and capacity planning. Data model: 26 finished goods, 65 materials, 3 plants, 9 lines, 18 suppliers, 36 weekly buckets. Portfolio demo built with Python, D3.js and Claude Dashboard. Synthetic data used for demonstration purposes only.",
+     tags:["Claude Dashboard","Python","D3.js","MRP / MPS","Data Modeling"], vis:5,
+     imgs:["scm","scm-2","scm-3","scm-4","scm-5"],
+     demo:"https://claude.ai/artifact/32SBwQm7wDy8PcUREVxnvm#overview"},
+    {t:"Pharmaceutical Trade Intelligence, Egypt", d:"Feb 2026", cat:"Pharma",
      q:"Should Egypt diversify its antibiotic sourcing beyond two supplier countries?",
      p:"Real UN Comtrade data, 2018 to September 2025, built on the total rows only so nothing is double-counted. In January to September 2025 imports were $50.5M, down 16.5% on the same months of 2024, and Belgium (43%) and Switzerland (26%) supplied most of it.",
      tags:["Power BI","Power Query","Data quality"], imgs:["pharma","pharma-2","pharma-3","pharma-4"],
@@ -894,11 +904,12 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
   grid.innerHTML = projects.map(function(p,i){
     var pages=p.imgs.length>1?p.imgs.length+' pages ⤢':'View ⤢';
     return '<div class="proj'+(i===0?' feature':'')+'" role="button" tabindex="0" data-i="'+i+'" data-cat="'+p.cat+'" aria-label="Open '+p.t+'">'+
-      '<span class="viz"><img src="img/'+p.imgs[0]+'.jpg" alt="'+p.t+(p.link?' charts':' Power BI dashboard')+'" loading="lazy"><span class="open">'+pages+'</span>'+'</span>'+
+      '<span class="viz"><img src="img/'+p.imgs[0]+'.jpg" alt="'+p.t+(p.link?' charts':p.demo?' dashboard':' Power BI dashboard')+'" loading="lazy"><span class="open">'+pages+'</span>'+'</span>'+
       '<div class="proj-body"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="cat">'+p.cat+'</span><time>'+p.d+'</time></div>'+
-      '<h4>'+p.t+'</h4><p>'+p.q+'</p>'+
-      '<div class="chips">'+p.tags.slice(0,3).map(function(t){return '<span class="chip">'+ic(TAGICON[t])+t+'</span>';}).join('')+
+      '<h4>'+p.t+'</h4>'+(p.sub?'<span class="sub">'+p.sub+'</span>':'')+'<p>'+p.q+'</p>'+
+      '<div class="chips">'+p.tags.slice(0,p.vis||3).map(function(t){return '<span class="chip">'+ic(TAGICON[t])+t+'</span>';}).join('')+
       (p.link?'<a class="chip" href="'+p.link+'" target="_blank" rel="noopener" data-ext style="text-decoration:none">'+ic("github")+'Code ↗</a>':'')+
+      (p.demo?'<a class="chip demo" href="'+p.demo+'" target="_blank" rel="noopener" data-ext style="text-decoration:none">'+ic("external")+'View Interactive Dashboard ↗</a>':'')+
       (p.repo?'<a class="chip" href="'+p.repo+'" target="_blank" rel="noopener" data-ext style="text-decoration:none">'+ic("github")+'Project ↗</a>':'')+'</div></div></div>';
   }).join('');
 
