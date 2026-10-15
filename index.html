@@ -1089,14 +1089,17 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
 
     var info=document.getElementById("jInfo"), jw=document.getElementById("jWhen"), jt=document.getElementById("jTitle"), jo=document.getElementById("jOrg"),
         ring=document.getElementById("jRing"), ringT=document.getElementById("jRingT"), active=-1, travLen=L;
-    function setTrav(len){ var pt=route.getPointAtLength(len); trav.setAttribute("transform","translate("+pt.x.toFixed(1)+" "+pt.y.toFixed(1)+")"); travLen=len; }
+    function setTrav(len){ var pt=route.getPointAtLength(len); trav.setAttribute("transform","translate("+pt.x.toFixed(1)+" "+pt.y.toFixed(1)+")"); travLen=len;
+      route.style.strokeDashoffset=(L-len).toFixed(1);
+      var n=0; CP.forEach(function(c,k){ if(c.len<=len+0.5){ c.g.classList.remove("off"); n=k+1; } });
+      if(n>maxN){ maxN=n; setRing(n); } }
     function setRing(n){ ring.setAttribute("stroke-dashoffset",(100.5*(1-n/CP.length)).toFixed(1)); ringT.textContent=n+"/"+CP.length; }
     function show(i){ if(i===active) return; active=i;
       CP.forEach(function(c,k){c.g.classList.toggle("on",k===i);});
       var c=CP[i]; info.classList.add("swap");
       setTimeout(function(){ jw.textContent=c.when; jt.textContent=c.title; jo.textContent=c.org; info.classList.remove("swap"); },260); }
     function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
-    var raf=null;
+    var raf=null, introRaf=null, introDone=false, maxN=0;
     function glide(to,ms,done){ cancelAnimationFrame(raf); var from=travLen,t0=performance.now();
       (function f(now){ var t=Math.min(1,(now-t0)/ms); setTrav(from+(to-from)*ease(t)); if(t<1) raf=requestAnimationFrame(f); else if(done) done(); })(t0); }
 
@@ -1104,19 +1107,21 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
     setTrav(L); setRing(CP.length); show(CP.length-1);
 
     var timer=null, cyc=CP.length-1, hold=0;
-    function user(i){ if(reduce){ show(i); setTrav(CP[i].len); return; } hold=performance.now(); clearTimeout(timer); show(i); glide(CP[i].len,1000); timer=setTimeout(loop,12000); }
+    function user(i){ if(reduce){ show(i); setTrav(CP[i].len); return; } introDone=true; cancelAnimationFrame(introRaf); hold=performance.now(); clearTimeout(timer); show(i); glide(CP[i].len,1000); timer=setTimeout(loop,12000); }
     function loop(){ if(performance.now()-hold<11000){ timer=setTimeout(loop,2000); return; }
       cyc=(active+1)%CP.length; show(cyc); glide(CP[cyc].len,2400); timer=setTimeout(loop,6500); }
 
     // intro: draw the route and pop pins as the traveller reaches them
     function intro(){
+      if(introDone) return;
+      maxN=0;
       CP.forEach(function(c){c.g.classList.add("off");});
       var t0=performance.now(), dur=16000, reached=0;
       route.style.strokeDashoffset=L; setRing(0);
       (function f(now){ var t=Math.min(1,(now-t0)/dur), len=L*ease(t);
         route.style.strokeDashoffset=(L-len).toFixed(1); setTrav(len);
         while(reached<CP.length && CP[reached].len<=len+0.5){ CP[reached].g.classList.remove("off"); show(reached); reached++; setRing(reached); }
-        if(t<1) raf=requestAnimationFrame(f); else { route.style.strokeDashoffset=0; timer=setTimeout(loop,6000); }
+        if(t<1) introRaf=requestAnimationFrame(f); else { introDone=true; route.style.strokeDashoffset=0; timer=setTimeout(loop,6000); }
       })(t0);
     }
     if(reduce) return;
