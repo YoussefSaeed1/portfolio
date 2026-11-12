@@ -392,12 +392,27 @@ a.lnk:hover,button.lnk:hover{border-color:var(--teal);transform:translateX(4px)}
 .lb-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .lb-txt{min-width:0;flex:1}
 .lb-txt p{margin-top:6px;font-size:14.5px;color:var(--muted);max-width:90ch}
-.lb-meta[hidden]{display:none}
+.lb-txt p.wide{max-width:118ch}
+.lb-more{margin-top:8px}
+.lb-more[hidden]{display:none}
+.lb-more>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:6px;width:fit-content;max-width:100%;border-radius:8px}
+.lb-more>summary::-webkit-details-marker{display:none}
+.lb-more .lb-k{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0}
+.lb-more .lb-n{font-style:normal;font-size:13px;color:var(--muted)}
+.lb-more .lb-tg{font-size:13px;font-weight:500;color:var(--teal);margin:0 0 0 2px;font-family:var(--body)}
+.lb-more .lb-tg::after{content:" ▾";display:inline-block;transition:transform .2s}
+.lb-more[open] .lb-tg::after{transform:rotate(180deg)}
+.lb-more span.lb-peek{margin:0}
+.lb-more[open] .lb-peek{display:none}
+.lb-more>summary:hover .lb-tg{text-decoration:underline}
+.lb-more[open] .lb-meta{animation:lbFade .22s ease-out}
+@keyframes lbFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.lb-more[open] .lb-meta{animation:none}.lb-more .lb-tg::after{transition:none}}
+.lb-more .chip{font-family:var(--body);font-size:12.5px;color:var(--ink);margin:0;padding:3px 9px}
+.lb-more .chip small{color:var(--muted);font-size:11.5px}
+.lb-more .chip.sel{border-color:rgba(55,169,155,.55)}
 .lb-meta{display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:start;margin-top:10px;max-width:120ch}
-.lb-meta .lb-k{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0;padding-top:4px}
-.lb-meta .chip{font-family:var(--body);font-size:12.5px;color:var(--ink);margin:0;padding:3px 9px}
-.lb-meta .chip small{color:var(--muted);font-size:11.5px}
-.lb-meta .chip.sel{border-color:rgba(55,169,155,.55)}
+.lb-meta .lb-k{padding-top:4px}
 .lb-bar strong{font-family:var(--display);font-weight:600;font-size:19px}
 .lb-bar span{font-family:var(--mono);font-size:12px;color:var(--muted);margin-left:10px}
 .lb-ctl{display:flex;gap:8px}
@@ -819,7 +834,7 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-labelledby="lbTitle">
   <div class="lb-box">
     <div class="lb-bar">
-      <div class="lb-txt"><strong id="lbTitle"></strong><span id="lbCount"></span><div class="lb-scroll"><p id="lbDesc"></p><div class="lb-meta" id="lbMeta" hidden></div></div></div>
+      <div class="lb-txt"><strong id="lbTitle"></strong><span id="lbCount"></span><div class="lb-scroll"><p id="lbDesc"></p><details class="lb-more" id="lbMeta" hidden></details></div></div>
       <div class="lb-ctl"><button type="button" id="lbPrev" aria-label="Previous page">← Prev</button><button type="button" id="lbNext" aria-label="Next page">Next →</button><button type="button" id="lbClose" aria-label="Close">Close ✕</button></div>
     </div>
     <div class="lb-img"><img id="lbImg" alt=""></div>
@@ -951,12 +966,20 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
     lbT.textContent=p.t; document.getElementById("lbDesc").textContent=p.q+" "+p.p; renderMeta(p); var multi=p.imgs.length>1; lbC.textContent=multi?("Page "+(pg+1)+" of "+p.imgs.length):"";
     lbP.hidden=lbN.hidden=!multi; lbP.disabled=pg===0; lbN.disabled=pg===p.imgs.length-1; }
   function esc(t){ return String(t).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
-  function renderMeta(p){ var m=document.getElementById("lbMeta");
-    if(!p.models&&!p.stack){ m.hidden=true; m.innerHTML=""; return; }
-    var h="";
-    if(p.models) h+='<span class="lb-k">Models</span><div class="chips">'+p.models.map(function(x){ return '<span class="chip'+(/^selected/.test(x[1]||"")?' sel':'')+'">'+esc(x[0])+(x[1]?' <small>'+esc(x[1])+'</small>':'')+'</span>'; }).join('')+'</div>';
-    if(p.stack) h+='<span class="lb-k">Stack</span><div class="chips">'+p.stack.map(function(t){ return '<span class="chip">'+ic(TAGICON[t])+esc(t)+'</span>'; }).join('')+'</div>';
-    m.innerHTML=h; m.hidden=false; }
+  function chip(x,peek){ var note=x[1]||""; if(peek) note=note.replace(/^selected( · )?/,"");
+    return '<span class="chip'+(/^selected/.test(x[1]||"")?' sel':'')+'">'+esc(x[0])+(note?' <small>'+esc(note)+'</small>':'')+'</span>'; }
+  function renderMeta(p){ var m=document.getElementById("lbMeta"), d=document.getElementById("lbDesc");
+    d.classList.toggle("wide",!!(p.models||p.stack));
+    if(!p.models&&!p.stack){ m.hidden=true; m.innerHTML=""; m.removeAttribute("data-p"); return; }
+    if(m.getAttribute("data-p")===String(cur)) return; // keep open/closed state while paging
+    m.setAttribute("data-p",String(cur)); m.open=false;
+    var models=p.models||[], sel=models.filter(function(x){return /^selected/.test(x[1]||"");}), rest=models.length-sel.length, st=(p.stack||[]).length;
+    var peek=[]; if(rest) peek.push("+"+rest+" more model"+(rest>1?"s":"")); if(st) peek.push(st+"-tool stack");
+    var h='<summary>'+(sel.length?'<span class="lb-k lb-peek">Selected</span>'+sel.map(function(x){return '<span class="lb-peek">'+chip(x,true)+'</span>';}).join(''):'')+
+      '<em class="lb-n lb-peek">'+esc(peek.join(" · "))+'</em><span class="lb-tg">Models &amp; stack</span></summary><div class="lb-meta">';
+    if(models.length) h+='<span class="lb-k">Models</span><div class="chips">'+models.map(function(x){return chip(x,false);}).join('')+'</div>';
+    if(st) h+='<span class="lb-k">Stack</span><div class="chips">'+p.stack.map(function(t){ return '<span class="chip">'+ic(TAGICON[t])+esc(t)+'</span>'; }).join('')+'</div>';
+    m.innerHTML=h+'</div>'; m.hidden=false; }
   function openLb(i){ cur=i; pg=0; lastFocus=document.activeElement; showLb(); lb.hidden=false; document.body.style.overflow="hidden"; document.getElementById("lbClose").focus(); }
   function closeLb(){ lb.hidden=true; document.body.style.overflow=""; if(lastFocus) lastFocus.focus(); }
   grid.addEventListener("click",function(e){ if(e.target.closest("[data-ext]")) return; var c=e.target.closest(".proj"); if(c) openLb(+c.dataset.i);});
