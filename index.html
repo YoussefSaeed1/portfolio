@@ -392,6 +392,12 @@ a.lnk:hover,button.lnk:hover{border-color:var(--teal);transform:translateX(4px)}
 .lb-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .lb-txt{min-width:0;flex:1}
 .lb-txt p{margin-top:6px;font-size:14.5px;color:var(--muted);max-width:90ch}
+.lb-meta[hidden]{display:none}
+.lb-meta{display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:start;margin-top:10px;max-width:120ch}
+.lb-meta .lb-k{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0;padding-top:4px}
+.lb-meta .chip{font-family:var(--body);font-size:12.5px;color:var(--ink);margin:0;padding:3px 9px}
+.lb-meta .chip small{color:var(--muted);font-size:11.5px}
+.lb-meta .chip.sel{border-color:rgba(55,169,155,.55)}
 .lb-bar strong{font-family:var(--display);font-weight:600;font-size:19px}
 .lb-bar span{font-family:var(--mono);font-size:12px;color:var(--muted);margin-left:10px}
 .lb-ctl{display:flex;gap:8px}
@@ -404,7 +410,9 @@ a.lnk:hover,button.lnk:hover{border-color:var(--teal);transform:translateX(4px)}
   .lb{align-items:flex-start;background:rgba(8,10,12,.97)}
   .lb-bar{gap:10px}
   .lb-bar strong{font-size:18px}
-  .lb-txt p{font-size:14px;max-height:26vh;overflow:auto}
+  .lb-txt p{font-size:14px}
+  .lb-scroll{max-height:30vh;overflow:auto}
+  .lb-meta{grid-template-columns:1fr;gap:6px}
   .lb-ctl{width:100%}.lb-ctl button{flex:1;padding:9px 10px}
   .lb-img{flex:0 1 auto;min-height:0;max-height:none}
 }
@@ -811,7 +819,7 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-labelledby="lbTitle">
   <div class="lb-box">
     <div class="lb-bar">
-      <div class="lb-txt"><strong id="lbTitle"></strong><span id="lbCount"></span><p id="lbDesc"></p></div>
+      <div class="lb-txt"><strong id="lbTitle"></strong><span id="lbCount"></span><div class="lb-scroll"><p id="lbDesc"></p><div class="lb-meta" id="lbMeta" hidden></div></div></div>
       <div class="lb-ctl"><button type="button" id="lbPrev" aria-label="Previous page">← Prev</button><button type="button" id="lbNext" aria-label="Next page">Next →</button><button type="button" id="lbClose" aria-label="Close">Close ✕</button></div>
     </div>
     <div class="lb-img"><img id="lbImg" alt=""></div>
@@ -838,8 +846,10 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
   var projects = [
     {t:"Intelligent Demand Forecasting & Inventory Optimisation", d:"Nov 2026", cat:"Machine Learning",
      q:"Does machine learning forecast daily retail demand better than simple baselines, and what would that mean for replenishment?",
-     p:"Graduation project for the Pre‑Master (Postgraduate) Diploma in Data Science. Two public datasets: Store Item (500 regular series) and Walmart M5 (30,490 series, 68.8% of series-days with zero sales). Thirteen methods, from seasonal baselines and Croston/SBA/TSB to global Random Forest and LightGBM, forecast 28 days ahead at four expanding validation origins with leakage-safe features, and the frozen choice was scored once on a sealed holdout. LightGBM cut Store Item MAE to 5.43 from 12.81 for seasonal naive; on M5 the price-free Random Forest beat a 28-day moving average by only 1.7% (1.047 vs 1.066) and was worse on MASE. A lost-sales simulation of four replenishment policies showed that better forecasts did not reliably lower cost (hypothetical cost units, not savings). Includes a five-page Power BI report and a live Next.js, FastAPI and Supabase research app.",
-     tags:["Python","Machine Learning","Forecasting","Power BI","Next.js · FastAPI","Supabase"], vis:5,
+     p:"Two public datasets: Store Item (500 regular series) and Walmart M5 (30,490 series, 68.8% of series-days with zero sales). Thirteen methods, from seasonal baselines and Croston/SBA/TSB to global Random Forest and LightGBM, forecast 28 days ahead at four expanding validation origins with leakage-safe features, and the frozen choice was scored once on a sealed holdout. LightGBM cut Store Item MAE to 5.43 from 12.81 for seasonal naive; on M5 the price-free Random Forest beat a 28-day moving average by only 1.7% (1.047 vs 1.066) and was worse on MASE. A lost-sales simulation of four replenishment policies showed that better forecasts did not reliably lower cost (hypothetical cost units, not savings). Includes a five-page Power BI report and a live Next.js, FastAPI and Supabase research app.",
+     tags:["Python","LightGBM","Random Forest","Power BI","Next.js · FastAPI"], vis:5,
+     models:[["LightGBM","selected · Store Item"],["Random Forest","selected · M5"],["Holt-Winters"],["Holt"],["Simple exponential smoothing"],["Croston"],["SBA"],["TSB"],["Seasonal naive","baseline"],["28-day moving average","baseline"],["Seasonal moving average","baseline"],["Naive","baseline"],["Zero forecast","baseline"],["ARIMA / SARIMA","subset only"]],
+     stack:["Python","pandas","NumPy","scikit-learn","LightGBM","statsmodels","Power BI (DAX)","Next.js","FastAPI","PostgreSQL (Supabase)","Vercel"],
      imgs:["demand-forecasting","demand-forecasting-2","demand-forecasting-3","demand-forecasting-4","demand-forecasting-5"],
      link:"https://github.com/YoussefSaeed1/intelligent-demand-forecasting",
      demo:"https://idf-web.vercel.app/", demoLabel:"Live Demo"},
@@ -874,7 +884,10 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
     {t:"Vehicle Price Prediction", d:"Dec 2025", cat:"Machine Learning",
      q:"Is a car's list price in the normal range for its specs?",
      p:"A Gradient Boosting model prices 9,820 cars within 6.9% on average, and within 10.2% for car models it has never seen. A leak-free scikit‑learn pipeline with automated data validation and a model card.",
-     tags:["Python","scikit-learn","Machine Learning"], imgs:["vehicle-price","vehicle-price-2","vehicle-price-3","vehicle-price-4"],
+     tags:["Python","scikit-learn","Gradient Boosting"],
+     models:[["Gradient Boosting","selected"],["Random Forest"],["Ridge regression"],["Median price","baseline"]],
+     stack:["Python","pandas","NumPy","scikit-learn","Matplotlib","Jupyter","pytest"],
+     imgs:["vehicle-price","vehicle-price-2","vehicle-price-3","vehicle-price-4"],
      link:"https://github.com/YoussefSaeed1/vehicle-price-prediction"},
     {t:"Sales Tracker", d:"Sep 2025", cat:"Sales",
      q:"Keep relying on bikes, or grow higher-margin accessories?",
@@ -884,7 +897,10 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
     {t:"Heart Disease Risk Prediction", d:"Sep 2025", cat:"Machine Learning",
      q:"Which patients should be flagged for further cardiac tests?",
      p:"Logistic regression reaches a cross-validated ROC AUC of 0.90 on 303 UCI patients and catches 26 of 28 patients with disease on the test set. Evaluated with repeated cross-validation, with data validation, a Streamlit app and a model card that shows the model misses more women than men.",
-     tags:["Python","scikit-learn","Machine Learning"], imgs:["heart-disease","heart-disease-2","heart-disease-3","heart-disease-4"],
+     tags:["Python","scikit-learn","Logistic Regression"],
+     models:[["Logistic regression","selected"],["Random Forest"],["Gradient Boosting"],["SVM (RBF)"],["Class prior","baseline"],["Decision tree","notebook"],["K-Means, hierarchical clustering","unsupervised · notebook"]],
+     stack:["Python","pandas","NumPy","scikit-learn","Streamlit","Matplotlib","Jupyter","pytest"],
+     imgs:["heart-disease","heart-disease-2","heart-disease-3","heart-disease-4"],
      link:"https://github.com/YoussefSaeed1/Heart_Disease_Project"},
     {t:"Procure-to-Pay Performance", d:"Jun 2025", cat:"Supply Chain",
      q:"Which suppliers and plants should we fix first to cut delays and off-contract buying?",
@@ -932,8 +948,15 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
       cur=null, pg=0, lastFocus=null;
   function slide(dir){ lbImg.classList.remove("slide-next","slide-prev"); void lbImg.offsetWidth; lbImg.classList.add(dir>0?"slide-next":"slide-prev"); }
   function showLb(){ var p=projects[cur]; lbImg.src="img/"+p.imgs[pg]+".jpg"; lbImg.alt=p.t+", page "+(pg+1);
-    lbT.textContent=p.t; document.getElementById("lbDesc").textContent=p.q+" "+p.p; var multi=p.imgs.length>1; lbC.textContent=multi?("Page "+(pg+1)+" of "+p.imgs.length):"";
+    lbT.textContent=p.t; document.getElementById("lbDesc").textContent=p.q+" "+p.p; renderMeta(p); var multi=p.imgs.length>1; lbC.textContent=multi?("Page "+(pg+1)+" of "+p.imgs.length):"";
     lbP.hidden=lbN.hidden=!multi; lbP.disabled=pg===0; lbN.disabled=pg===p.imgs.length-1; }
+  function esc(t){ return String(t).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function renderMeta(p){ var m=document.getElementById("lbMeta");
+    if(!p.models&&!p.stack){ m.hidden=true; m.innerHTML=""; return; }
+    var h="";
+    if(p.models) h+='<span class="lb-k">Models</span><div class="chips">'+p.models.map(function(x){ return '<span class="chip'+(/^selected/.test(x[1]||"")?' sel':'')+'">'+esc(x[0])+(x[1]?' <small>'+esc(x[1])+'</small>':'')+'</span>'; }).join('')+'</div>';
+    if(p.stack) h+='<span class="lb-k">Stack</span><div class="chips">'+p.stack.map(function(t){ return '<span class="chip">'+ic(TAGICON[t])+esc(t)+'</span>'; }).join('')+'</div>';
+    m.innerHTML=h; m.hidden=false; }
   function openLb(i){ cur=i; pg=0; lastFocus=document.activeElement; showLb(); lb.hidden=false; document.body.style.overflow="hidden"; document.getElementById("lbClose").focus(); }
   function closeLb(){ lb.hidden=true; document.body.style.overflow=""; if(lastFocus) lastFocus.focus(); }
   grid.addEventListener("click",function(e){ if(e.target.closest("[data-ext]")) return; var c=e.target.closest(".proj"); if(c) openLb(+c.dataset.i);});
