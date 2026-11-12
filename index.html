@@ -836,12 +836,12 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
   var TAGICON = {"Claude Dashboard":"claude","D3.js":"code","Power BI":"powerbi","Python":"python","Power Query":"query","Excel":"excel","SQL":"sqlserver"};
 
   var projects = [
-    {t:"Intelligent Demand Forecasting & Inventory Optimisation", d:"Nov 2026", cat:"Data Science",
-     sub:"Cairo University graduation project",
+    {t:"Intelligent Demand Forecasting & Inventory Optimisation", d:"Nov 2026", cat:"Machine Learning",
      q:"Does machine learning forecast daily retail demand better than simple baselines, and what would that mean for replenishment?",
      p:"Graduation project for the Pre‑Master (Postgraduate) Diploma in Data Science. Two public datasets: Store Item (500 regular series) and Walmart M5 (30,490 series, 68.8% of series-days with zero sales). Thirteen methods, from seasonal baselines and Croston/SBA/TSB to global Random Forest and LightGBM, forecast 28 days ahead at four expanding validation origins with leakage-safe features, and the frozen choice was scored once on a sealed holdout. LightGBM cut Store Item MAE to 5.43 from 12.81 for seasonal naive; on M5 the price-free Random Forest beat a 28-day moving average by only 1.7% (1.047 vs 1.066) and was worse on MASE. A lost-sales simulation of four replenishment policies showed that better forecasts did not reliably lower cost (hypothetical cost units, not savings). Includes a five-page Power BI report and a live Next.js, FastAPI and Supabase research app.",
      tags:["Python","Machine Learning","Forecasting","Power BI","Next.js · FastAPI","Supabase"], vis:5,
-     imgs:["demand-forecasting","demand-forecasting-2","demand-forecasting-3","demand-forecasting-4","demand-forecasting-5","demand-forecasting-6","demand-forecasting-7"],
+     imgs:["demand-forecasting","demand-forecasting-2","demand-forecasting-3","demand-forecasting-4","demand-forecasting-5"],
+     link:"https://github.com/YoussefSaeed1/intelligent-demand-forecasting",
      demo:"https://idf-web.vercel.app/", demoLabel:"Live Demo"},
     {t:"Inventory Management", d:"Oct 2026", cat:"Supply Chain",
      q:"Revenue is up 21.8% but stockouts are rising: which products need higher reorder points?",
