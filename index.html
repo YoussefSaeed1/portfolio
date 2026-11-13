@@ -581,7 +581,7 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
     </div>
 
     <div class="kpis" aria-label="Career at a glance">
-      <div class="kpi"><strong>5+</strong><span>years in data analytics</span></div>
+      <div class="kpi"><strong id="kpiYears">5+</strong><span>years in data analytics</span></div>
       <div class="kpi"><strong>5</strong><span>industries</span><div class="inds"><em>Pharma</em><em>Insurance</em><em>Fintech</em><em>Automotive</em><em>Poultry</em></div></div>
       <div class="kpi"><strong>6</strong><span>certifications</span></div>
     </div>
@@ -1200,6 +1200,19 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
     },{rootMargin:"-45% 0px -50% 0px"});
     secs.forEach(function(s){ if(s) io.observe(s); });
   }
+})();
+</script>
+
+<script>
+/* Years in data analytics: counted from the first data role (1 Mar 2021).
+   Shows "N" on the exact anniversary and "N+" on every other day. */
+(function(){
+  var el=document.getElementById("kpiYears"); if(!el) return;
+  var start=new Date(2021,2,1), now=new Date(), y=now.getFullYear()-start.getFullYear();
+  var a=new Date(start); a.setFullYear(start.getFullYear()+y);
+  if(a>now){ y--; a.setFullYear(start.getFullYear()+y); }
+  if(y<1) return;
+  el.textContent=y+(a.toDateString()===now.toDateString()?"":"+");
 })();
 </script>
 
