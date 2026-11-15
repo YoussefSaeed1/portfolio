@@ -178,10 +178,6 @@ section.page{padding-block:clamp(80px,11vw,140px)}
 .chip.demo{border-color:rgba(55,169,155,.55);color:var(--teal)}
 .chip.demo:hover{background:rgba(55,169,155,.12)}
 .proj time{font-family:var(--mono);font-size:12px;color:var(--muted)}
-@media (min-width:981px){.proj.feature{grid-column:span 2;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr)}
-  .proj.feature .viz{aspect-ratio:auto;height:100%;min-height:280px;border-bottom:0;border-right:1px solid var(--line)}
-  .proj.feature .viz img{object-fit:contain;object-position:center;padding:18px}
-  .proj.feature .proj-body{padding:26px}.proj.feature h4{font-size:26px}}
 @media (max-width:980px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.proj.feature{grid-column:1/-1}}
 @media (max-width:600px){.grid{grid-template-columns:1fr}}
 .proj[hidden]{display:none!important}
@@ -903,11 +899,6 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
      p:"Real UN Comtrade data, 2018 to September 2025, built on the total rows only so nothing is double-counted. In January to September 2025 imports were $50.5M, down 16.5% on the same months of 2024, and Belgium (43%) and Switzerland (26%) supplied most of it.",
      tags:["Power BI","Power Query","Data quality"], imgs:["pharma","pharma-2","pharma-3","pharma-4"],
      repo:"https://github.com/YoussefSaeed1/powerbi-projects/tree/main/02-pharma-trade-intelligence-egypt"},
-    {feat:1, t:"Procure-to-Pay Performance", d:"Jun 2025", cat:"Supply Chain",
-     q:"Which suppliers and plants should we fix first to cut delays and off-contract buying?",
-     p:"Follows 12,234 purchase orders from requisition to payment (sample data). In FY2025, $48.6M of spend took 26.9 days from request to goods receipt against a 25-day target, 80.4% of deliveries arrived on time, and 8.2% of spend was maverick buying. Row-level security by plant, a supplier scorecard and data quality checks on every refresh.",
-     tags:["Power BI","DAX","Governance"], imgs:["p2p","p2p-2","p2p-3","p2p-4","p2p-5"],
-     repo:"https://github.com/YoussefSaeed1/powerbi-projects/tree/main/04-procure-to-pay"},
     {feat:1, t:"Motor Insurance Portfolio", d:"Jan 2026", cat:"Insurance",
      q:"Which customer segments should be repriced, and by how much?",
      p:"41,248 policies of a fictional motor insurer, 2023 to 2025 (sample data). The 2025 loss ratio rose to 66.2% from 58.9% because the average claim cost jumped 21% while premiums rose 3%; the combined ratio of 92.9% still leaves a profit. Drivers aged 18–25 run at a 110.7% loss ratio, theft is 6% of claims but 35% of the cost, and online customers are the most profitable but the least likely to renew.",
@@ -918,7 +909,7 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
      p:"13 branches of a fictional multi-brand car distributor in Egypt, 2023 to 2024 (sample data). Net sales rose 28% to EGP 477.7M while workshop visits fell 11%, so the growth came from prices; labour is 12% of sales but 30% of gross profit. Owners leave when the 3-year warranty ends (79% come back before it, 41% after), Upper Egypt has half the service penetration of other regions with its only branch over capacity, and operating profit fell 28% on discounts, overheads and late payers. Each of the six pages states the decision, what was found and a recommendation calculated from the data.",
      tags:["Power BI","Power Query","DAX"], imgs:["aftersales","aftersales-2","aftersales-3","aftersales-4","aftersales-5","aftersales-6"],
      repo:"https://github.com/YoussefSaeed1/powerbi-projects/tree/main/10-aftersales-performance"},
-    {t:"Vehicle Price Prediction", d:"Dec 2025", cat:"Machine Learning",
+    {feat:1, t:"Vehicle Price Prediction", d:"Dec 2025", cat:"Machine Learning",
      q:"Is a car's list price in the normal range for its specs?",
      p:"A Gradient Boosting model prices 9,820 cars within 6.9% on average, and within 10.2% for car models it has never seen. A leak-free scikit‑learn pipeline with automated data validation and a model card.",
      tags:["Python","scikit-learn","Gradient Boosting"],
@@ -926,6 +917,11 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
      stack:["Python","pandas","NumPy","scikit-learn","Matplotlib","Jupyter","pytest"],
      imgs:["vehicle-price","vehicle-price-2","vehicle-price-3","vehicle-price-4"],
      link:"https://github.com/YoussefSaeed1/vehicle-price-prediction"},
+    {feat:1, t:"Procure-to-Pay Performance", d:"Jun 2025", cat:"Supply Chain",
+     q:"Which suppliers and plants should we fix first to cut delays and off-contract buying?",
+     p:"Follows 12,234 purchase orders from requisition to payment (sample data). In FY2025, $48.6M of spend took 26.9 days from request to goods receipt against a 25-day target, 80.4% of deliveries arrived on time, and 8.2% of spend was maverick buying. Row-level security by plant, a supplier scorecard and data quality checks on every refresh.",
+     tags:["Power BI","DAX","Governance"], imgs:["p2p","p2p-2","p2p-3","p2p-4","p2p-5"],
+     repo:"https://github.com/YoussefSaeed1/powerbi-projects/tree/main/04-procure-to-pay"},
     {t:"Sales Tracker", d:"Sep 2025", cat:"Sales",
      q:"Keep relying on bikes, or grow higher-margin accessories?",
      p:"$24.91M revenue at a 41.97% profit margin, and bikes bring in almost 95% of it (sample data). Tracks revenue, cost and profit for 2015 to mid‑2017 by category, region and continent. Cost and profit are stacked so each bar reads as revenue, and 2.17% of units sold come back.",
