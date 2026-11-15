@@ -870,13 +870,6 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
   var TAGICON = {"Claude Dashboard":"claude","D3.js":"code","Power BI":"powerbi","Python":"python","Power Query":"query","Excel":"excel","SQL":"sqlserver"};
 
   var projects = [
-    {feat:1, t:"Yunex — From Raw Data to Trusted Insights", d:"Nov 2026", cat:"Data Engineering",
-     q:"An end-to-end data platform that transforms fragmented raw data into reliable, analytics-ready datasets through visual pipelines, automated quality checks, and built-in data lineage.",
-     p:"Design, transform, validate, and explore data workflows in one unified experience — from Bronze ingestion to Silver transformations and Gold analytics. What runs where: the live demo compiles each pipeline to SQL and runs it in your browser with DuckDB-WASM, with no backend; it publishes Bronze, Silver and Gold outputs with a manifest (inputs, schema, row count and a SHA-256 content hash), builds lineage from those manifests, and blocks any output that fails an error-severity quality rule. The full platform's separate engine is built on Python, DuckDB and dbt Core; the demo shows earlier runs of that engine as read-only history and does not execute it. Synthetic data only.",
-     tags:["Python","DuckDB","SQL","React","TypeScript","DuckDB-WASM","dbt Core"], vis:7,
-     stack:["DuckDB-WASM","SQL","TypeScript","React","React Flow","IndexedDB","Vite","Playwright","Python","DuckDB","dbt Core","Vercel"],
-     imgs:["yunex","yunex-2","yunex-3","yunex-4","yunex-5","yunex-6"],
-     demo:"https://yunex-cloud.vercel.app/", demoLabel:"Live Demo"},
     {feat:1, t:"Intelligent Demand Forecasting & Inventory Optimisation", d:"Nov 2026", cat:"Machine Learning",
      q:"Does machine learning forecast daily retail demand better than simple baselines, and what would that mean for replenishment?",
      p:"Two public datasets: Store Item (500 regular series) and Walmart M5 (30,490 series, 68.8% of series-days with zero sales). Thirteen methods, from seasonal baselines and Croston/SBA/TSB to global Random Forest and LightGBM, forecast 28 days ahead at four expanding validation origins with leakage-safe features, and the frozen choice was scored once on a sealed holdout. LightGBM cut Store Item MAE to 5.43 from 12.81 for seasonal naive; on M5 the price-free Random Forest beat a 28-day moving average by only 1.7% (1.047 vs 1.066) and was worse on MASE. A lost-sales simulation of four replenishment policies showed that better forecasts did not reliably lower cost (hypothetical cost units, not savings). Includes a five-page Power BI report and a live Next.js, FastAPI and Supabase research app.",
@@ -886,6 +879,13 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
      imgs:["demand-forecasting","demand-forecasting-2","demand-forecasting-3","demand-forecasting-4","demand-forecasting-5"],
      link:"https://github.com/YoussefSaeed1/intelligent-demand-forecasting",
      demo:"https://idf-web.vercel.app/", demoLabel:"Live Demo"},
+    {feat:1, t:"Yunex — From Raw Data to Trusted Insights", d:"Nov 2026", cat:"Data Engineering",
+     q:"An end-to-end data platform that transforms fragmented raw data into reliable, analytics-ready datasets through visual pipelines, automated quality checks, and built-in data lineage.",
+     p:"Design, transform, validate, and explore data workflows in one unified experience — from Bronze ingestion to Silver transformations and Gold analytics. What runs where: the live demo compiles each pipeline to SQL and runs it in your browser with DuckDB-WASM, with no backend; it publishes Bronze, Silver and Gold outputs with a manifest (inputs, schema, row count and a SHA-256 content hash), builds lineage from those manifests, and blocks any output that fails an error-severity quality rule. The full platform's separate engine is built on Python, DuckDB and dbt Core; the demo shows earlier runs of that engine as read-only history and does not execute it. Synthetic data only.",
+     tags:["Python","DuckDB","SQL","React","TypeScript","DuckDB-WASM","dbt Core"], vis:7,
+     stack:["DuckDB-WASM","SQL","TypeScript","React","React Flow","IndexedDB","Vite","Playwright","Python","DuckDB","dbt Core","Vercel"],
+     imgs:["yunex","yunex-2","yunex-3","yunex-4","yunex-5","yunex-6"],
+     demo:"https://yunex-cloud.vercel.app/", demoLabel:"Live Demo"},
     {feat:1, t:"Supply Chain Planning | MRP & MPS Control Tower", d:"Oct 2026", cat:"Supply Chain",
      q:"Which material shortages will block production, and which purchase orders must be placed first?",
      p:"21 of 65 materials face a shortage, 9 of them critical, and 21 recommended POs should already have been placed. Material limits cut executable production to 95.9% of the plan, and line P2-B peaks at 119% capacity in W07. Nine pages trace demand through the MPS, BOM explosion and MRP net requirements to shortages, procurement and capacity, with global filters and drill-downs; planned and executable production are kept separate. Data model: 26 finished goods, 65 materials, 3 plants, 9 lines, 18 suppliers and 36 weekly buckets. Synthetic data used for demonstration purposes only.",
