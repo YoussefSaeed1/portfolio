@@ -184,6 +184,13 @@ section.page{padding-block:clamp(80px,11vw,140px)}
   .proj.feature .proj-body{padding:26px}.proj.feature h4{font-size:26px}}
 @media (max-width:980px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.proj.feature{grid-column:1/-1}}
 @media (max-width:600px){.grid{grid-template-columns:1fr}}
+.proj[hidden]{display:none!important}
+.more-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:28px}
+.more-wrap[hidden]{display:none}
+.more-btn{font-size:16px;padding:11px 24px;background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+.more-btn:hover{border-color:var(--teal);color:var(--ink)}
+.more-btn:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+.more-status{margin:0;font-size:13px;color:var(--muted)}
 
 /* Skills */
 .skills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
@@ -596,6 +603,10 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
       <div class="filters" role="group" aria-label="Filter projects" id="filters"></div>
     </div>
     <div class="grid" id="grid"></div>
+    <div class="more-wrap" id="moreWrap" hidden>
+      <button type="button" class="btn more-btn" id="loadMore" aria-controls="grid"></button>
+      <p class="more-status" id="moreStatus" role="status" aria-live="polite"></p>
+    </div>
   </div>
 </section>
 
@@ -859,7 +870,14 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
   var TAGICON = {"Claude Dashboard":"claude","D3.js":"code","Power BI":"powerbi","Python":"python","Power Query":"query","Excel":"excel","SQL":"sqlserver"};
 
   var projects = [
-    {t:"Intelligent Demand Forecasting & Inventory Optimisation", d:"Nov 2026", cat:"Machine Learning",
+    {feat:1, t:"Yunex — From Raw Data to Trusted Insights", d:"Nov 2026", cat:"Data Engineering",
+     q:"An end-to-end data platform that transforms fragmented raw data into reliable, analytics-ready datasets through visual pipelines, automated quality checks, and built-in data lineage.",
+     p:"Design, transform, validate, and explore data workflows in one unified experience — from Bronze ingestion to Silver transformations and Gold analytics. What runs where: the live demo compiles each pipeline to SQL and runs it in your browser with DuckDB-WASM, with no backend; it publishes Bronze, Silver and Gold outputs with a manifest (inputs, schema, row count and a SHA-256 content hash), builds lineage from those manifests, and blocks any output that fails an error-severity quality rule. The full platform's separate engine is built on Python, DuckDB and dbt Core; the demo shows earlier runs of that engine as read-only history and does not execute it. Synthetic data only.",
+     tags:["Python","DuckDB","SQL","React","TypeScript","DuckDB-WASM","dbt Core"], vis:7,
+     stack:["DuckDB-WASM","SQL","TypeScript","React","React Flow","IndexedDB","Vite","Playwright","Python","DuckDB","dbt Core","Vercel"],
+     imgs:["yunex","yunex-2","yunex-3","yunex-4","yunex-5","yunex-6"],
+     demo:"https://yunex-cloud.vercel.app/", demoLabel:"Live Demo"},
+    {feat:1, t:"Intelligent Demand Forecasting & Inventory Optimisation", d:"Nov 2026", cat:"Machine Learning",
      q:"Does machine learning forecast daily retail demand better than simple baselines, and what would that mean for replenishment?",
      p:"Two public datasets: Store Item (500 regular series) and Walmart M5 (30,490 series, 68.8% of series-days with zero sales). Thirteen methods, from seasonal baselines and Croston/SBA/TSB to global Random Forest and LightGBM, forecast 28 days ahead at four expanding validation origins with leakage-safe features, and the frozen choice was scored once on a sealed holdout. LightGBM cut Store Item MAE to 5.43 from 12.81 for seasonal naive; on M5 the price-free Random Forest beat a 28-day moving average by only 1.7% (1.047 vs 1.066) and was worse on MASE. A lost-sales simulation of four replenishment policies showed that better forecasts did not reliably lower cost (hypothetical cost units, not savings). Includes a five-page Power BI report and a live Next.js, FastAPI and Supabase research app.",
      tags:["Python","LightGBM","Random Forest","Power BI","Next.js · FastAPI"], vis:5,
@@ -868,36 +886,34 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
      imgs:["demand-forecasting","demand-forecasting-2","demand-forecasting-3","demand-forecasting-4","demand-forecasting-5"],
      link:"https://github.com/YoussefSaeed1/intelligent-demand-forecasting",
      demo:"https://idf-web.vercel.app/", demoLabel:"Live Demo"},
-    {t:"Yunex: ETL & Data Pipeline Platform", d:"Nov 2026", cat:"Data Engineering",
-     q:"Connect. Transform. Govern. A visual ETL tool that runs in your browser and publishes only data that passes its quality checks.",
-     p:"Yunex is an ETL tool with a React Flow pipeline editor. You compose pipelines from ten node types (select, rename, filter, cast, fill nulls, normalise text, require values, deduplicate, lookup join and aggregate); the live demo compiles the graph to SQL, validates it (cycles, missing inputs, unknown columns, type mismatches) and runs it in your browser with DuckDB-WASM, with no backend. Each run publishes Bronze, Silver and Gold outputs with a manifest (inputs, schema, row count and a SHA-256 content hash), and lineage is built from those manifests. Quality rules run as SQL before anything is published: an error-severity failure blocks that output, and every node downstream of it is skipped instead of running on bad data. Pipelines, runs and outputs are stored in IndexedDB; earlier runs of the original Python, DuckDB and dbt Core engine are kept as read-only history. Synthetic data only.",
-     tags:["DuckDB-WASM","SQL","React Flow","TypeScript","Data quality"], vis:5,
-     stack:["DuckDB-WASM","SQL","TypeScript","React","React Flow","IndexedDB","Vite","Playwright","Python","DuckDB","dbt Core","Vercel"],
-     imgs:["yunex","yunex-2","yunex-3","yunex-4","yunex-5","yunex-6"],
-     demo:"https://yunex-cloud.vercel.app/", demoLabel:"Live Demo"},
-    {t:"Inventory Management", d:"Oct 2026", cat:"Supply Chain",
-     q:"Revenue is up 21.8% but stockouts are rising: which products need higher reorder points?",
-     p:"Revenue reached $15.51M with $7.75M gross profit, but the stockout rate climbed to 6.3% from 5.5% last year. Five report pages cover the executive view, operations, supplier and warehouse performance, product detail with ABC classification, and data quality. Row-level security by warehouse and a catalogue of 147 documented measures. UI inspired by Arbaz Ahmad's Inventory Management Dashboard.",
-     tags:["Power BI","DAX","Data modeling"], imgs:["inventory","inventory-2","inventory-3","inventory-4","inventory-5"],
-     repo:"https://github.com/YoussefSaeed1/powerbi-projects/tree/main/01-inventory-management"},
-    {t:"Supply Chain Planning | MRP & MPS Control Tower", d:"Oct 2026", cat:"Supply Chain",
+    {feat:1, t:"Supply Chain Planning | MRP & MPS Control Tower", d:"Oct 2026", cat:"Supply Chain",
      q:"Which material shortages will block production, and which purchase orders must be placed first?",
      p:"21 of 65 materials face a shortage, 9 of them critical, and 21 recommended POs should already have been placed. Material limits cut executable production to 95.9% of the plan, and line P2-B peaks at 119% capacity in W07. Nine pages trace demand through the MPS, BOM explosion and MRP net requirements to shortages, procurement and capacity, with global filters and drill-downs; planned and executable production are kept separate. Data model: 26 finished goods, 65 materials, 3 plants, 9 lines, 18 suppliers and 36 weekly buckets. Synthetic data used for demonstration purposes only.",
      tags:["Claude Dashboard","Python","D3.js","MRP / MPS","Data Modeling"], vis:5,
      imgs:["scm","scm-2","scm-3","scm-4","scm-5"],
      demo:"/demos/supply-chain/",
      link:"https://github.com/YoussefSaeed1/supply-chain-planning-control-tower"},
-    {t:"Pharmaceutical Trade Intelligence, Egypt", d:"Feb 2026", cat:"Pharma",
+    {feat:1, t:"Inventory Management", d:"Oct 2026", cat:"Supply Chain",
+     q:"Revenue is up 21.8% but stockouts are rising: which products need higher reorder points?",
+     p:"Revenue reached $15.51M with $7.75M gross profit, but the stockout rate climbed to 6.3% from 5.5% last year. Five report pages cover the executive view, operations, supplier and warehouse performance, product detail with ABC classification, and data quality. Row-level security by warehouse and a catalogue of 147 documented measures. UI inspired by Arbaz Ahmad's Inventory Management Dashboard.",
+     tags:["Power BI","DAX","Data modeling"], imgs:["inventory","inventory-2","inventory-3","inventory-4","inventory-5"],
+     repo:"https://github.com/YoussefSaeed1/powerbi-projects/tree/main/01-inventory-management"},
+    {feat:1, t:"Pharmaceutical Trade Intelligence, Egypt", d:"Feb 2026", cat:"Pharma",
      q:"Should Egypt diversify its antibiotic sourcing beyond two supplier countries?",
      p:"Real UN Comtrade data, 2018 to September 2025, built on the total rows only so nothing is double-counted. In January to September 2025 imports were $50.5M, down 16.5% on the same months of 2024, and Belgium (43%) and Switzerland (26%) supplied most of it.",
      tags:["Power BI","Power Query","Data quality"], imgs:["pharma","pharma-2","pharma-3","pharma-4"],
      repo:"https://github.com/YoussefSaeed1/powerbi-projects/tree/main/02-pharma-trade-intelligence-egypt"},
-    {t:"Motor Insurance Portfolio", d:"Jan 2026", cat:"Insurance",
+    {feat:1, t:"Procure-to-Pay Performance", d:"Jun 2025", cat:"Supply Chain",
+     q:"Which suppliers and plants should we fix first to cut delays and off-contract buying?",
+     p:"Follows 12,234 purchase orders from requisition to payment (sample data). In FY2025, $48.6M of spend took 26.9 days from request to goods receipt against a 25-day target, 80.4% of deliveries arrived on time, and 8.2% of spend was maverick buying. Row-level security by plant, a supplier scorecard and data quality checks on every refresh.",
+     tags:["Power BI","DAX","Governance"], imgs:["p2p","p2p-2","p2p-3","p2p-4","p2p-5"],
+     repo:"https://github.com/YoussefSaeed1/powerbi-projects/tree/main/04-procure-to-pay"},
+    {feat:1, t:"Motor Insurance Portfolio", d:"Jan 2026", cat:"Insurance",
      q:"Which customer segments should be repriced, and by how much?",
      p:"41,248 policies of a fictional motor insurer, 2023 to 2025 (sample data). The 2025 loss ratio rose to 66.2% from 58.9% because the average claim cost jumped 21% while premiums rose 3%; the combined ratio of 92.9% still leaves a profit. Drivers aged 18–25 run at a 110.7% loss ratio, theft is 6% of claims but 35% of the cost, and online customers are the most profitable but the least likely to renew.",
      tags:["Power BI","Power Query","DAX"], imgs:["insurance","insurance-2","insurance-3","insurance-4","insurance-5"],
      repo:"https://github.com/YoussefSaeed1/powerbi-projects/tree/main/09-motor-insurance-portfolio"},
-    {t:"Aftersales Performance", d:"Dec 2025", cat:"Automotive",
+    {feat:1, t:"Aftersales Performance", d:"Dec 2025", cat:"Automotive",
      q:"Which branches, reps and customers should aftersales act on first to grow gross profit?",
      p:"13 branches of a fictional multi-brand car distributor in Egypt, 2023 to 2024 (sample data). Net sales rose 28% to EGP 477.7M while workshop visits fell 11%, so the growth came from prices; labour is 12% of sales but 30% of gross profit. Owners leave when the 3-year warranty ends (79% come back before it, 41% after), Upper Egypt has half the service penetration of other regions with its only branch over capacity, and operating profit fell 28% on discounts, overheads and late payers. Each of the six pages states the decision, what was found and a recommendation calculated from the data.",
      tags:["Power BI","Power Query","DAX"], imgs:["aftersales","aftersales-2","aftersales-3","aftersales-4","aftersales-5","aftersales-6"],
@@ -923,11 +939,6 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
      stack:["Python","pandas","NumPy","scikit-learn","Streamlit","Matplotlib","Jupyter","pytest"],
      imgs:["heart-disease","heart-disease-2","heart-disease-3","heart-disease-4"],
      link:"https://github.com/YoussefSaeed1/Heart_Disease_Project"},
-    {t:"Procure-to-Pay Performance", d:"Jun 2025", cat:"Supply Chain",
-     q:"Which suppliers and plants should we fix first to cut delays and off-contract buying?",
-     p:"Follows 12,234 purchase orders from requisition to payment (sample data). In FY2025, $48.6M of spend took 26.9 days from request to goods receipt against a 25-day target, 80.4% of deliveries arrived on time, and 8.2% of spend was maverick buying. Row-level security by plant, a supplier scorecard and data quality checks on every refresh.",
-     tags:["Power BI","DAX","Governance"], imgs:["p2p","p2p-2","p2p-3","p2p-4","p2p-5"],
-     repo:"https://github.com/YoussefSaeed1/powerbi-projects/tree/main/04-procure-to-pay"},
     {t:"E‑Commerce Sales & Profit", d:"Aug 2024", cat:"Sales",
      q:"Where should discounts be capped and pricing fixed to stop losing money?",
      p:"$1.92M in sales and $224.1K profit. The South region sold $357K yet lost $14.4K, driven by technology rather than discounts, and lines discounted 9% or more run at a −5.0% margin. Includes a data quality page and row-level security by area manager.",
@@ -1006,18 +1017,43 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
     if(e.key==="Escape") closeLb(); else if(e.key==="ArrowRight") lbN.click(); else if(e.key==="ArrowLeft") lbP.click(); });
 
   // Filters
-  var cats=["All"].concat(projects.map(function(p){return p.cat;}).filter(function(c,i,a){return a.indexOf(c)===i;}));
+  // Filter order stays fixed whatever order the projects are featured in; a new domain is appended.
+  var CAT_ORDER=["Machine Learning","Data Engineering","Supply Chain","Pharma","Insurance","Automotive","Sales","Market"];
+  var cats=["All"].concat(CAT_ORDER.filter(function(c){return projects.some(function(p){return p.cat===c;});}),
+    projects.map(function(p){return p.cat;}).filter(function(c,i,a){return a.indexOf(c)===i&&CAT_ORDER.indexOf(c)<0;}));
   var saved="All"; try{ saved=localStorage.getItem("ys-filter")||"All"; }catch(e){}
   if(cats.indexOf(saved)<0) saved="All";
   filters.innerHTML = cats.map(function(c){
     var n = c==="All"?projects.length:projects.filter(function(p){return p.cat===c;}).length;
     return '<button type="button" id="f-'+c.toLowerCase()+'" data-cat="'+c+'" aria-pressed="false">'+c+'<small>('+n+')</small></button>';
   }).join('');
+  // "All" shows the featured projects first and the rest through Load More, a batch at a time.
+  // A domain filter always shows every matching project, so pagination never hides a match.
+  var FEATURED=projects.filter(function(p){return p.feat;}).length, BATCH=6, shown=FEATURED, curCat="All";
+  var moreWrap=document.getElementById("moreWrap"), moreBtn=document.getElementById("loadMore"), moreStatus=document.getElementById("moreStatus");
+  function render(){
+    var cards=grid.children, total=cards.length;
+    [].forEach.call(cards,function(el,i){
+      el.hidden = curCat==="All" ? i>=shown : el.dataset.cat!==curCat;
+    });
+    var left = curCat==="All" ? total-Math.min(shown,total) : 0;
+    moreWrap.hidden = left<=0;
+    if(left>0){
+      var next=Math.min(BATCH,left);
+      moreBtn.textContent="Load more projects ("+left+" more)";
+      moreBtn.setAttribute("aria-label","Load "+next+" more project"+(next>1?"s":"")+", "+left+" remaining");
+      moreStatus.textContent="Showing "+Math.min(shown,total)+" of "+total+" projects";
+    }
+  }
   function apply(cat){
     [].forEach.call(filters.children,function(b){b.setAttribute("aria-pressed", b.dataset.cat===cat?"true":"false");});
-    [].forEach.call(grid.children,function(el){el.hidden = !(cat==="All"||el.dataset.cat===cat);});
+    curCat=cat; shown=FEATURED; render();
     try{ localStorage.setItem("ys-filter",cat); }catch(e){}
   }
+  moreBtn.addEventListener("click",function(){
+    var first=shown; shown=Math.min(shown+BATCH,grid.children.length); render();
+    var c=grid.children[first]; if(c) c.focus({preventScroll:true});
+  });
   filters.addEventListener("click",function(e){var b=e.target.closest("button"); if(b) apply(b.dataset.cat);});
   apply(saved);
 
