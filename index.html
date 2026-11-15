@@ -868,6 +868,14 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
      imgs:["demand-forecasting","demand-forecasting-2","demand-forecasting-3","demand-forecasting-4","demand-forecasting-5"],
      link:"https://github.com/YoussefSaeed1/intelligent-demand-forecasting",
      demo:"https://idf-web.vercel.app/", demoLabel:"Live Demo"},
+    {t:"Yunex: Data Pipelines in the Browser", d:"Nov 2026", cat:"Data Engineering",
+     sub:"Personal project · code in a private repository",
+     q:"Can a visual data pipeline run end to end in the browser, with quality gates that actually stop bad data from being published?",
+     p:"Yunex is a data platform with a React Flow pipeline editor. You compose pipelines from ten node types (select, rename, filter, cast, fill nulls, normalise text, require values, deduplicate, lookup join and aggregate); the live demo compiles the graph to SQL, validates it (cycles, missing inputs, unknown columns, type mismatches) and runs it in your browser with DuckDB-WASM, with no backend. Each run publishes Bronze, Silver and Gold outputs with a manifest (inputs, schema, row count and a SHA-256 content hash), and lineage is built from those manifests. Quality rules run as SQL before publication: in the guided example two negative prices fail an error-severity rule, so Silver is blocked and Gold is skipped until a filter is added. Pipelines, runs and outputs are stored in IndexedDB; earlier runs of the original Python, DuckDB and dbt Core engine are kept as read-only history. Synthetic data only.",
+     tags:["DuckDB-WASM","SQL","React Flow","TypeScript","Data quality"], vis:5,
+     stack:["DuckDB-WASM","SQL","TypeScript","React","React Flow","IndexedDB","Vite","Playwright","Python","DuckDB","dbt Core","Vercel"],
+     imgs:["yunex","yunex-2","yunex-3","yunex-4","yunex-5"],
+     demo:"https://yunex-cloud.vercel.app/", demoLabel:"Live Demo"},
     {t:"Inventory Management", d:"Oct 2026", cat:"Supply Chain",
      q:"Revenue is up 21.8% but stockouts are rising: which products need higher reorder points?",
      p:"Revenue reached $15.51M with $7.75M gross profit, but the stockout rate climbed to 6.3% from 5.5% last year. Five report pages cover the executive view, operations, supplier and warehouse performance, product detail with ABC classification, and data quality. Row-level security by warehouse and a catalogue of 147 documented measures. UI inspired by Arbaz Ahmad's Inventory Management Dashboard.",
@@ -975,7 +983,7 @@ footer{border-top:1px solid var(--line);padding-block:48px 40px;background:linea
     var models=p.models||[], sel=models.filter(function(x){return /^selected/.test(x[1]||"");}), rest=models.length-sel.length, st=(p.stack||[]).length;
     var peek=[]; if(rest) peek.push("+"+rest+" more model"+(rest>1?"s":"")); if(st) peek.push(st+"-tool stack");
     var h='<summary>'+(sel.length?'<span class="lb-k lb-peek">Selected</span>'+sel.map(function(x){return '<span class="lb-peek">'+chip(x,true)+'</span>';}).join(''):'')+
-      '<em class="lb-n lb-peek">'+esc(peek.join(" · "))+'</em><span class="lb-tg">Models &amp; stack</span></summary><div class="lb-meta">';
+      '<em class="lb-n lb-peek">'+esc(peek.join(" · "))+'</em><span class="lb-tg">'+(models.length?'Models &amp; stack':'Stack')+'</span></summary><div class="lb-meta">';
     if(models.length) h+='<span class="lb-k">Models</span><div class="chips">'+models.map(function(x){return chip(x,false);}).join('')+'</div>';
     if(st) h+='<span class="lb-k">Stack</span><div class="chips">'+p.stack.map(function(t){ return '<span class="chip">'+ic(TAGICON[t])+esc(t)+'</span>'; }).join('')+'</div>';
     m.innerHTML=h+'</div>'; m.hidden=false; }

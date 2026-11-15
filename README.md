@@ -4,6 +4,7 @@ Personal portfolio of **Youssef Saeed**, Data Analytics Tech Lead.
 
 - Power BI dashboard projects with full report pages
 - Data science research project (demand forecasting and inventory optimisation) with a live demo
+- Data engineering project (Yunex): visual pipelines that run in the browser with DuckDB-WASM, with a live demo
 - Skills, certifications (with verification links), experience timeline
 - Speaking and community work
 - Animated career-journey map
